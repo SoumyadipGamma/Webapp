@@ -24,6 +24,13 @@ pipeline {
                 }
                  sh 'docker push dipakdock/webapp:$BUILD_TAG'
             }
+        }
+
+        stage('Deploy webapp in DEV Env') {
+            steps {
+                sh 'docker rm -f webapp'
+                sh 'docker run -d -p 8081:8080 --name webapp dipakdock/webapp:$BUILD_TAG'
+            }
         }            
     }
 }
