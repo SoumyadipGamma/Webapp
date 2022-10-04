@@ -47,6 +47,15 @@ pipeline {
                 sleep 10
                 sh "curl --silent http://172.18.0.3:8081/ | grep india"
             }
+        }
+
+        stage('Deploy webapp in Prod Env') {
+            steps {
+                sshagent(['PROD_ENV_CRED']) {
+                    sh 'ssh -o StrictHostKeyChecking=no prod@172.18.0.5 docker rm -f webapp'
+                    sh 'ssh -o StrictHostKeyChecking=no prod@172.18.0.5 docker run -d -p 8081:8080 --name webapp dipakdock/webapp:$BUILD_TAG'
+                }
+            }
         }            
     }
 }
