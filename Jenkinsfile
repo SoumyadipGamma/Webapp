@@ -31,6 +31,22 @@ pipeline {
                 sh 'docker rm -f webapp'
                 sh 'docker run -d -p 8081:8080 --name webapp dipakdock/webapp:$BUILD_TAG'
             }
+        }
+        
+        stage('Deploy webapp in Test Env') {
+            steps {
+                sshagent(['TEST_ENV_CRED']) {
+                    sh 'ssh -o StrictHostKeyChecking=no test@172.18.0.4 docker rm -f webapp'
+                    sh 'ssh -o StrictHostKeyChecking=no test@172.18.0.4 docker run -d -p 8081:8080 --name webapp dipakdock/webapp:$BUILD_TAG'
+                }
+            }
+        }
+
+        stage('Auto testing on Test Env') {
+            steps {
+                sleep 10
+                sh "curl --silent http://172.18.0.3:8081/ | grep India"
+            }
         }            
     }
 }
