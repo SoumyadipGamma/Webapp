@@ -45,7 +45,7 @@ pipeline {
         stage('Auto testing on Test Env') {
             steps {
                 sleep 10
-                sh "curl --silent http://172.18.0.3:8081/ | grep india"
+                sh "curl --silent http://172.18.0.3:8081/ | grep India"
             }
         }
 
